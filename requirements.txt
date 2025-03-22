@@ -1,0 +1,13 @@
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+tensorflow
+keras
+deepface
+shap
+mlflow
+google-cloud-storage
+opencv-python
+streamlit  # optional nếu làm dashboard
