@@ -46,14 +46,16 @@ This is a multi-class image classification task with a real-world edge: data is 
 
 ```mermaid
 graph TD
-    A[Raw Images in GCS] --> B[ETL & Preprocessing]
-    B --> C[Emotion Annotation with DeepFace]
-    C --> D[Feature Extraction (ResNet50)]
+    A[Raw Images in GCS] --> B[ETL and Preprocessing]
+    B --> C[Emotion Annotation via DeepFace]
+    C --> D[Feature Extraction using ResNet50]
     D --> E[Dataset Creation]
-    E --> F[Model Training (MLflow Tracking)]
-    F --> G[Evaluation & Explainability (SHAP)]
+    E --> F[Model Training with MLflow]
+    F --> G[Evaluation and Explainability]
     G --> H[Deployment on Cloud Run]
-    H --> I[Streamlit Dashboard (optional)]
+    H --> I[Streamlit Dashboard]
+
+
 ```
 
 ---
