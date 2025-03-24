@@ -1,7 +1,3 @@
-# emotion-recognition-pipeline
----
-
-```markdown
 # 🧠 Emotion Recognition from Natural Images  
 ### 🖼️ Deep Learning-based Facial Emotion Classification Pipeline  
 > End-to-end AI project: From raw data to deployment and explainable insights.
@@ -45,24 +41,6 @@ This is a multi-class image classification task with a real-world edge: data is 
 - **Storage**: Images and annotation files are stored on Google Cloud Storage (GCS)
 
 ---
----
-
-## 📍 Data Annotation – Emotion Tagging via DeepFace
-
-To create emotion labels for over 31,000 natural images, we implemented an automated annotation pipeline using [**DeepFace**](https://github.com/serengil/deepface). Each image was analyzed to extract the following metadata:
-
-- `dominant_emotion` 🎭 (e.g., happy, sad, angry, neutral, surprise)
-- `age` 🧒🏼 (estimated)
-- `gender` 🚻 (estimated)
-- `race` 🌍 (estimated)
-
-### ✅ Highlights:
-- **Batch-based annotation** for large-scale efficiency  
-- **GPU-accelerated** using Colab Pro (GT4) → 10× faster processing  
-- **Monitoring enabled**: Pie charts per batch & label drift logs (`label_monitor_log.csv`)  
-- **Annotation output** saved in CSV + Parquet formats and pushed to Google Cloud Storage (GCS)
-
-📒 Annotation notebook: [`02_annotate_deepface_batch.ipynb`](notebooks/02_annotate_deepface_batch.ipynb)
 
 ## 🧱 Project Architecture / Pipeline
 
@@ -77,6 +55,70 @@ graph TD
     G --> H[Deployment on Cloud Run]
     H --> I[Streamlit Dashboard (optional)]
 ```
+
+---
+
+## 🧼 ETL – Image Preprocessing
+
+Initial preprocessing of ~31k images from Flickr30k:
+
+- Images are resized to 224x224
+- Saved to a `processed/` folder on GCS
+- Metadata (filename, dimensions, size, etc.) saved in `.csv` and `.parquet`
+
+📒 ETL notebook: [`01_etl_resize.ipynb`](notebooks/01_etl_resize.ipynb)
+
+---
+
+## 📍 Data Annotation – Emotion Tagging via DeepFace
+
+To create emotion labels, we implemented an automated annotation pipeline using [**DeepFace**](https://github.com/serengil/deepface). Each image was analyzed to extract the following metadata:
+
+- `dominant_emotion` 🎭 (e.g., happy, sad, angry, neutral, surprise)
+- `age` 🧒🏼 (estimated)
+- `gender` 🚻 (estimated)
+- `race` 🌍 (estimated)
+
+### ✅ Highlights:
+- **Batch-based annotation** for large-scale efficiency  
+- **GPU-accelerated** using Colab Pro (GT4) → 10× faster processing  
+- **Monitoring enabled**: Pie charts per batch & label drift logs (`label_monitor_log.csv`)  
+- **Annotation output** saved in CSV + Parquet formats and pushed to Google Cloud Storage (GCS)
+
+📒 Annotation notebook: [`02_annotate_deepface_batch.ipynb`](notebooks/02_annotate_deepface_batch.ipynb)
+
+---
+
+## 📊 Monitoring & Finalization
+
+A lightweight monitoring module was added to:
+
+- Visualize label distributions across batches
+- Detect label drift using CSV logs
+- Merge all batch annotations into a final dataset
+- Save as `final_emotion_dataset.parquet` and upload to GCS
+
+📒 Monitoring notebook: [`06_data_monitoring_and_finalize.ipynb`](notebooks/06_data_monitoring_and_finalize.ipynb)  
+📦 Utilities: [`monitoring_utils.py`](src/monitoring_utils.py)
+
+---
+
+## 📍 Feature Extraction – ResNet50 Embeddings
+
+After annotation, we extract high-level image features using a **pretrained ResNet50** model. Each image is converted into a 2048-dimensional embedding vector representing facial structure, texture, and expression cues.
+
+### 🔧 How it works:
+- Images are loaded directly from GCS
+- Each image is resized to 224x224 and passed through ResNet50 (avg_pool layer)
+- Output vectors are saved as `image_vectors.npy` and uploaded to GCS
+
+### ✅ Highlights:
+- 📦 Feature vector dimension: `2048`
+- ⚡ Fast inference using GPU (Colab Pro)
+- 💾 Features stored in `.npy` format and reused for modeling
+- 🔁 Optional integration with t-SNE or clustering later
+
+📒 Feature extraction notebook: [`07_feature_extraction.ipynb`](notebooks/07_feature_extraction.ipynb)
 
 ---
 
@@ -97,8 +139,6 @@ graph TD
 ---
 
 ## ⚙️ How to Run
-
-<!-- TODO: Add setup instructions, Colab link, requirements.txt -->
 
 1. Clone this repo
 2. Set up your GCP credentials and bucket
@@ -147,21 +187,3 @@ _Machine Learning & Data Enthusiast_
 ## 📄 License
 
 This project is open-source under the [MIT License](LICENSE).
-```
-
----
-
-## ✅ Hướng dẫn sử dụng
-- Bạn hãy:
-  - **Copy toàn bộ nội dung trên vào file `README.md` trong repo GitHub**
-  - Cập nhật các phần `<!-- TODO -->` khi có kết quả.
-  - Thêm ảnh minh họa, metric thật khi hoàn tất từng giai đoạn.
-- Đừng quên gắn sao ⭐ nếu bạn muốn người khác tìm được project của bạn sau này.
-
----
-
-Bạn có muốn mình:
-- ✅ Viết thêm template `requirements.txt`?
-- ✅ Viết luôn 1 notebook mẫu đầu tiên `01_etl_images_gcs.ipynb` để bạn bắt tay làm?
-
-Bạn chọn bước tiếp theo nhé! Mình theo bạn tới cùng 🚀
