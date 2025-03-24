@@ -45,6 +45,24 @@ This is a multi-class image classification task with a real-world edge: data is 
 - **Storage**: Images and annotation files are stored on Google Cloud Storage (GCS)
 
 ---
+---
+
+## 📍 Data Annotation – Emotion Tagging via DeepFace
+
+To create emotion labels for over 31,000 natural images, we implemented an automated annotation pipeline using [**DeepFace**](https://github.com/serengil/deepface). Each image was analyzed to extract the following metadata:
+
+- `dominant_emotion` 🎭 (e.g., happy, sad, angry, neutral, surprise)
+- `age` 🧒🏼 (estimated)
+- `gender` 🚻 (estimated)
+- `race` 🌍 (estimated)
+
+### ✅ Highlights:
+- **Batch-based annotation** for large-scale efficiency  
+- **GPU-accelerated** using Colab Pro (GT4) → 10× faster processing  
+- **Monitoring enabled**: Pie charts per batch & label drift logs (`label_monitor_log.csv`)  
+- **Annotation output** saved in CSV + Parquet formats and pushed to Google Cloud Storage (GCS)
+
+📒 Annotation notebook: [`02_annotate_deepface_batch.ipynb`](notebooks/02_annotate_deepface_batch.ipynb)
 
 ## 🧱 Project Architecture / Pipeline
 
